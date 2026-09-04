@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
+8}
 :root {
   --bg: #f0d9b5;
   --board-light: #f0d9b5;
@@ -615,26 +615,16 @@ color: #fff; border: 2px solid #fff; }
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
-.light, .dark {
-    font-family: inherit;
-    font-weight: 400;
-    -webkit-font-smoothing: antialiased;
-    font-size: clamp(1.2rem, 5vw, 2rem);
-    overflow: hidden;
-    line-height: 1;
-}
+  .light, .dark {
+    width: auto;
+    height: auto;
+    aspect-ratio: 1;
+    font-size: clamp(1.8rem, 7vw, 3rem);
+  }
 
-.piece {
-    font-weight: 400;
-    filter: none;
-    text-shadow: none;
-    font-size: clamp(1.2rem, 5vw, 2rem);
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+  .piece {
+    font-size: clamp(2.2rem, 8vw, 3.4rem);
+  }
   .notation {
     font-size: 10px;
   }
