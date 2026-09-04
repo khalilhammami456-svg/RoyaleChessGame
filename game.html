@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chess Royale</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <main>
+    <div class="theme-switcher" id="theme-switcher">
+      <button class="theme-btn active" data-theme="classic">Light</button>
+      <button class="theme-btn" data-theme="dark">Dark</button>
+      <button class="theme-btn" data-theme="ocean">Ocean</button>
+      <button class="theme-btn" data-theme="forest">Forest</button>
+    </div>
+
+    <div class="player-timers" id="player-timers">
+      <div class="timer-panel active" id="timer-white">
+        <span class="timer-label">White</span>
+        <span class="timer-value" id="white-timer">10:00</span>
+        <div class="material-tray" id="material-white"></div>
+      </div>
+      <div class="timer-panel" id="timer-black">
+        <span class="timer-label">Black</span>
+        <span class="timer-value" id="black-timer">10:00</span>
+        <div class="material-tray" id="material-black"></div>
+      </div>
+    </div>
+
+    <div class="move-history" id="move-history">
+      <div class="move-history-header">Move History</div>
+      <div class="move-history-list" id="move-history-list"></div>
+    </div>
+
+    <div id="board"></div>
+
+    <div class="bar">
+      <button id="quit"><span>&#10005;</span> Quit</button>
+      <button id="restart"><span>&#8634;</span> Restart</button>
+      <button id="cancel"><span>&#10006;</span> Cancel Move</button>
+      <button id="backward"><span><i class="fa fa-chevron-left"></i></span> Backward</button>
+      <button id="forward"><span><i class="fa fa-chevron-right"></i></span> Forward</button>
+    </div>
+  </main>
+
+  <div id="promotion-overlay" class="promotion-overlay hidden"></div>
+  <div id="promotion-modal" class="promotion-modal hidden">
+    <div>Choose a piece</div>
+    <div id="promotion-choices" class="promotion-choices"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

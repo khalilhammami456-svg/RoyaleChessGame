@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Royale</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="mode-select-page">
+        <div class="mode-select-shell">
+            <div class="page-title">
+                <span class="title-badge">♟</span>
+                <h1>Choose Your Match</h1>
+            </div>
+
+            <div class="container">
+                <div class="option-card white-card">
+                    <h1>Two Players</h1>
+                    <span class="player-icon" data-player-color="white">&#9812;</span>
+                    <button class="choose-color-btn" type="button" data-game-mode="two-player" data-player-color="white">Choose</button>
+                </div>
+                <div class="option-card white-card">
+                    <h1>Play vs Computer</h1>
+                    <span class="player-icon" data-player-color="white">&#9812;</span>
+                    <button class="choose-color-btn" type="button" data-game-mode="computer" data-player-color="white">Play as White</button>
+                </div>
+                <div class="option-card black-card">
+                    <h1>Play vs Computer</h1>
+                    <span class="player-icon" data-player-color="black">&#9818;</span>
+                    <button class="choose-color-btn" type="button" data-game-mode="computer" data-player-color="black">Play as Black</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+      const savedTheme = localStorage.getItem('chess-theme') || 'classic';
+      if (savedTheme !== 'classic') document.body.setAttribute('data-theme', savedTheme);
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.choose-color-btn');
+
+        buttons.forEach((button) => {
+          const icon = button.parentElement.querySelector('.player-icon');
+          const playerColor = button.dataset.playerColor || 'white';
+          icon.innerHTML = playerColor === 'white' ? '&#9812;' : '&#9818;';
+
+          button.addEventListener('click', () => {
+            localStorage.setItem('chess-game-mode', button.dataset.gameMode || 'two-player');
+            localStorage.setItem('chess-player-color', playerColor);
+            window.location.href = 'game.html';
+          });
+        });
+      });
+    </script>
+</body>
+</html>
