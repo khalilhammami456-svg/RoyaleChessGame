@@ -696,6 +696,19 @@ color: #fff; border: 2px solid #fff; }
     font-size: 2rem;
   }
 }
+@media (max-width: 480px) {
+    .light, .dark {
+        font-weight: 100;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+    
+    .piece {
+        font-weight: 100;
+        filter: none;
+        text-shadow: none;
+    }
+}
 /* Board — rises up from below with a fade */
 @keyframes loading {
   0%   { opacity: 0; transform: translateY(40px) scale(0.96); }
