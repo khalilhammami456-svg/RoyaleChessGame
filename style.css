@@ -615,20 +615,24 @@ color: #fff; border: 2px solid #fff; }
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
- .light, .dark {
-    font-family: "Segoe UI Symbol", "Arial Unicode MS", sans-serif;
-    font-weight: 100;
+.light, .dark {
+    font-family: inherit;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    font-size: clamp(1rem, 4vw, 1.5rem);
+    font-size: clamp(1.2rem, 5vw, 2rem);
+    overflow: hidden;
+    line-height: 1;
 }
 
 .piece {
-    font-family: "Segoe UI Symbol", "Arial Unicode MS", sans-serif;
-    font-weight: 100;
+    font-weight: 400;
     filter: none;
     text-shadow: none;
-    opacity: 0.85;  /* slightly reduces the boldness appearance */
+    font-size: clamp(1.2rem, 5vw, 2rem);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
   .notation {
