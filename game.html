@@ -3,18 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chess Royale</title>
+  <title>ATAST Chess Royale</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:,">
+  <link rel="icon" href="assets/atast-badge.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <main>
+    <div class="atast-header">
+      <img src="assets/atast-wordmark.png" alt="ATAST — Tunisian Association for the Future of Sciences and Technology" class="atast-wordmark">
+      <div class="atast-tagline">Chess Royale <span class="dot">&#9670;</span> ATAST Event Edition</div>
+    </div>
+
     <div class="theme-switcher" id="theme-switcher">
-      <button class="theme-btn active" data-theme="classic">Light</button>
+      <button class="theme-btn" data-theme="classic">Light</button>
       <button class="theme-btn" data-theme="dark">Dark</button>
       <button class="theme-btn" data-theme="ocean">Ocean</button>
       <button class="theme-btn" data-theme="forest">Forest</button>
+      <button class="theme-btn active" data-theme="atast">ATAST</button>
     </div>
 
     <div class="player-timers" id="player-timers">
@@ -51,6 +57,15 @@
     <div>Choose a piece</div>
     <div id="promotion-choices" class="promotion-choices"></div>
   </div>
+
+  <div id="endgame-overlay" class="endgame-overlay hidden"></div>
+  <div id="endgame-modal" class="endgame-modal hidden">
+    <div class="endgame-emblem"><img src="assets/atast-badge.png" alt="ATAST"></div>
+    <div class="endgame-title" id="endgame-title"></div>
+    <div class="endgame-message" id="endgame-message"></div>
+    <button id="endgame-close" class="endgame-close-btn" type="button">Play On</button>
+  </div>
+  <div id="confetti-layer" class="confetti-layer"></div>
 
   <script src="script.js"></script>
 </body>

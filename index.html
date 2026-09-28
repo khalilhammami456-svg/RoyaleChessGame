@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess Royale</title>
+    <title>ATAST Chess Royale</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/atast-badge.png">
 </head>
 <body>
     <main class="mode-select-page">
         <div class="mode-select-shell">
+            <div class="atast-header">
+                <img src="assets/atast-wordmark.png" alt="ATAST — Tunisian Association for the Future of Sciences and Technology" class="atast-wordmark">
+                <div class="atast-tagline">Chess Royale <span class="dot">&#9670;</span> ATAST Event Edition</div>
+            </div>
+
             <div class="page-title">
                 <span class="title-badge">♟</span>
                 <h1>Choose Your Match</h1>
@@ -35,7 +41,7 @@
     </main>
 
     <script>
-      const savedTheme = localStorage.getItem('chess-theme') || 'classic';
+      const savedTheme = localStorage.getItem('chess-theme') || 'atast';
       if (savedTheme !== 'classic') document.body.setAttribute('data-theme', savedTheme);
 
       document.addEventListener('DOMContentLoaded', () => {

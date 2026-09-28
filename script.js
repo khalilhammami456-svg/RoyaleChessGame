@@ -118,6 +118,7 @@ let castlingRights = {
 };
 
 let selectedSquare = null;
+let lastMove = null;
 const playerColor = localStorage.getItem('chess-player-color') || 'white';
 const gameMode = localStorage.getItem('chess-game-mode') || 'two-player';
 document.body.setAttribute('data-player-color', playerColor);
@@ -552,7 +553,7 @@ function startTimer() {
             stopTimer();
             gameIsOver = true;
             const winner = activeColor === 'white' ? 'Black' : 'White';
-            setTimeout(() => alert(`Time's up! ${winner} wins! ⏰`), 100);
+            setTimeout(() => showEndGameModal("Time's Up ⏰", describeWinner(winner), true), 100);
             updateTimers();
         }
     }, 1000);
@@ -579,6 +580,22 @@ function renderBoard() {
 
             if (selectedSquare && selectedSquare[0] === row && selectedSquare[1] === col) {
                 square.classList.add('selected');
+            }
+
+            if (lastMove && (
+                (lastMove.fromRow === row && lastMove.fromCol === col) ||
+                (lastMove.toRow === row && lastMove.toCol === col)
+            )) {
+                square.classList.add('last-move');
+            }
+
+            // Legal-move hints for the currently selected piece — reuses isValidMove
+            // as a read-only oracle, so it can never disagree with what the game
+            // actually allows.
+            if (selectedSquare && !(selectedSquare[0] === row && selectedSquare[1] === col) &&
+                isValidMove(selectedSquare[0], selectedSquare[1], row, col)) {
+                square.classList.add('move-hint');
+                if (board[row][col] !== '') square.classList.add('capture-hint');
             }
 
             if (isBoardFlipped()) {
@@ -782,7 +799,7 @@ function applyTheme(theme) {
     });
 }
 
-applyTheme(localStorage.getItem('chess-theme') || 'classic');
+applyTheme(localStorage.getItem('chess-theme') || 'atast');
 
 // ─── Click Handler ────────────────────────────────────────────
 function handleClick(row, col, isComputerMove = false) {
@@ -861,6 +878,7 @@ function handleClick(row, col, isComputerMove = false) {
     future = [];
     futureMoveLog = [];
     moveHistory.push(board.map(r => [...r]));
+    lastMove = { fromRow: selectedRow, fromCol: selectedCol, toRow: row, toCol: col };
     board[row][col] = board[selectedRow][selectedCol];
     board[selectedRow][selectedCol] = '';
 
@@ -1199,7 +1217,7 @@ function finishTurnAfterMove(fromRect, row, col, isCapture, extraAnim) {
         if (fromRect) animateMove(fromRect, row, col);
         if (extraAnim) animateMove(extraAnim.rect, extraAnim.toRow, extraAnim.toCol);
         playSound('move');
-        setTimeout(() => alert(`Draw! Neither side has enough material to checkmate. 🤝`), 100);
+        setTimeout(() => showEndGameModal('Draw 🤝', 'Neither side has enough material to checkmate.', false), 100);
         return;
     }
 
@@ -1213,10 +1231,10 @@ function finishTurnAfterMove(fromRect, row, col, isCapture, extraAnim) {
         const winner = currentTurn === 'white' ? 'Black' : 'White';
         if (isInCheck(currentTurn)) {
             playSound('checkmate');
-            setTimeout(() => alert(`Checkmate! ${winner} wins! 🏆`), 100);
+            setTimeout(() => showEndGameModal('Checkmate! 🏆', describeWinner(winner), true), 100);
         } else {
             playSound('move');
-            setTimeout(() => alert(`Stalemate! It's a draw! 🤝`), 100);
+            setTimeout(() => showEndGameModal('Stalemate 🤝', "It's a draw!", false), 100);
         }
         return;
     }
@@ -1273,6 +1291,62 @@ function handlePromotion(row, col, color, isComputerMove, onComplete) {
     return true;
 }
 
+// ─── Game End Presentation ─────────────────────────────────────
+// Purely cosmetic — swaps the old alert() popups for a themed modal (plus a
+// confetti burst on a win). Doesn't change what counts as game over or when;
+// it only changes how that moment is announced.
+function describeWinner(winnerLabel) {
+    const winnerColor = winnerLabel.toLowerCase();
+    if (gameMode === 'computer') {
+        return winnerColor === playerColor
+            ? 'You win! Well played. 🎉'
+            : 'The computer wins this time — good game! 🤖';
+    }
+    return `${winnerLabel} wins the game! 🏆`;
+}
+
+function spawnConfetti() {
+    const layer = document.getElementById('confetti-layer');
+    if (!layer) return;
+    const colors = ['#c4073d', '#d4af37', '#ffffff', '#8c1030'];
+    for (let i = 0; i < 60; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.width = (6 + Math.random() * 6) + 'px';
+        piece.style.height = (10 + Math.random() * 8) + 'px';
+        piece.style.animationDuration = (2.2 + Math.random() * 1.6) + 's';
+        piece.style.animationDelay = (Math.random() * 0.4) + 's';
+        layer.appendChild(piece);
+        piece.addEventListener('animationend', () => piece.remove());
+    }
+}
+
+function showEndGameModal(title, message, celebrate) {
+    const overlay = document.getElementById('endgame-overlay');
+    const modal = document.getElementById('endgame-modal');
+    const titleEl = document.getElementById('endgame-title');
+    const messageEl = document.getElementById('endgame-message');
+    if (!overlay || !modal || !titleEl || !messageEl) {
+        alert(`${title}\n${message}`);
+        return;
+    }
+    titleEl.textContent = title;
+    messageEl.textContent = message;
+    overlay.classList.remove('hidden');
+    modal.classList.remove('hidden');
+    if (celebrate) spawnConfetti();
+}
+
+function hideEndGameModal() {
+    document.getElementById('endgame-overlay')?.classList.add('hidden');
+    document.getElementById('endgame-modal')?.classList.add('hidden');
+}
+
+document.getElementById('endgame-close')?.addEventListener('click', hideEndGameModal);
+document.getElementById('endgame-overlay')?.addEventListener('click', hideEndGameModal);
+
 // ─── Buttons ──────────────────────────────────────────────────
 cancelBtn.addEventListener('click', () => {
     selectedSquare = null;
@@ -1290,6 +1364,7 @@ restartBtn.addEventListener('click', () => {
     enPassantTarget = null;
     currentTurn = 'white';
     selectedSquare = null;
+    lastMove = null;
     gameIsOver = false;
     timers = { white: TIME_PER_PLAYER, black: TIME_PER_PLAYER };
     castlingRights = {
@@ -1334,6 +1409,7 @@ backwardBtn.addEventListener('click', () => {
             board[row][col] = lastBoard[row][col];
     currentTurn = currentTurn === 'white' ? 'black' : 'white';
     selectedSquare = null;
+    lastMove = null;
     renderMoveHistoryList();
     renderBoard();
 
@@ -1357,6 +1433,7 @@ forwardBtn.addEventListener('click', () => {
             board[row][col] = nextBoard[row][col];
     currentTurn = currentTurn === 'white' ? 'black' : 'white';
     selectedSquare = null;
+    lastMove = null;
     renderMoveHistoryList();
     renderBoard();
 
