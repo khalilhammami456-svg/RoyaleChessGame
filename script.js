@@ -595,7 +595,10 @@ function renderBoard() {
             if (selectedSquare && !(selectedSquare[0] === row && selectedSquare[1] === col) &&
                 isValidMove(selectedSquare[0], selectedSquare[1], row, col)) {
                 square.classList.add('move-hint');
-                if (board[row][col] !== '') square.classList.add('capture-hint');
+                const selectedPiece = board[selectedSquare[0]][selectedSquare[1]];
+                const isEnPassantHint = (selectedPiece === 'P' || selectedPiece === 'p') &&
+                    !!enPassantTarget && row === enPassantTarget[0] && col === enPassantTarget[1];
+                if (board[row][col] !== '' || isEnPassantHint) square.classList.add('capture-hint');
             }
 
             if (isBoardFlipped()) {
@@ -1390,9 +1393,9 @@ quitBtn.addEventListener('click', () => {
 backwardBtn.addEventListener('click', () => {
     if (moveHistory.length === 0) return;
 
-    const lastMove = moveLog[moveLog.length - 1];
-    if (lastMove) {
-        futureMoveLog.push(lastMove);
+    const undoneMove = moveLog[moveLog.length - 1];
+    if (undoneMove) {
+        futureMoveLog.push(undoneMove);
         moveLog.pop();
     }
 
