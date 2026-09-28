@@ -4,14 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ATAST Chess Royale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="assets/atast-badge.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+  <div class="atast-grain"></div>
+  <svg class="atast-ribbons" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">
+    <g class="ribbon-tl">
+      <path d="M-60 150 C 120 150, 250 120, 330 20 C 380 -40, 390 -80, 380 -120" stroke="currentColor" stroke-width="34" stroke-linecap="round"/>
+      <path d="M-60 390 C 160 380, 300 330, 420 250 C 540 170, 560 60, 520 -40 C 500 -90, 480 -120, 470 -150" stroke="currentColor" stroke-width="34" stroke-linecap="round"/>
+    </g>
+    <g class="ribbon-br">
+      <path d="M1680 560 C 1500 560, 1340 610, 1250 720 C 1190 800, 1180 880, 1200 1000" stroke="currentColor" stroke-width="34" stroke-linecap="round"/>
+      <path d="M1680 790 C 1560 780, 1470 810, 1420 880 C 1400 910, 1395 950, 1400 1000" stroke="currentColor" stroke-width="34" stroke-linecap="round"/>
+    </g>
+  </svg>
+
   <main>
     <div class="atast-header">
-      <img src="assets/atast-wordmark.png" alt="ATAST — Tunisian Association for the Future of Sciences and Technology" class="atast-wordmark">
+      <span class="brand-mark" style="width:56px;height:56px;">
+        <img src="assets/atast-club.png" alt="ATAST Club">
+      </span>
       <div class="atast-tagline">Chess Royale <span class="dot">&#9670;</span> ATAST Event Edition</div>
     </div>
 
@@ -60,7 +77,19 @@
 
   <div id="endgame-overlay" class="endgame-overlay hidden"></div>
   <div id="endgame-modal" class="endgame-modal hidden">
-    <div class="endgame-emblem"><img src="assets/atast-badge.png" alt="ATAST"></div>
+    <div class="endgame-emblem">
+      <div class="orbit-rings hidden" id="endgame-orbit" style="inset:-42%;">
+        <svg viewBox="0 0 400 400" class="ring-outer">
+          <ellipse cx="200" cy="200" rx="190" ry="70" fill="none" stroke="#F5921E" stroke-width="7" transform="rotate(-24 200 200)"/>
+          <circle cx="30" cy="265" r="9" fill="#F5921E" transform="rotate(-24 200 200)"/>
+        </svg>
+        <svg viewBox="0 0 400 400" class="ring-inner">
+          <ellipse cx="200" cy="200" rx="180" ry="62" fill="none" stroke="#F5921E" stroke-width="5" transform="rotate(32 200 200)"/>
+        </svg>
+      </div>
+      <span class="pulse-ring hidden" id="endgame-pulse"></span>
+      <img src="assets/atast-badge.png" alt="ATAST">
+    </div>
     <div class="endgame-title" id="endgame-title"></div>
     <div class="endgame-message" id="endgame-message"></div>
     <button id="endgame-close" class="endgame-close-btn" type="button">Close</button>

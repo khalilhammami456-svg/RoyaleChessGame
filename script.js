@@ -1311,7 +1311,7 @@ function describeWinner(winnerLabel) {
 function spawnConfetti() {
     const layer = document.getElementById('confetti-layer');
     if (!layer) return;
-    const colors = ['#c4073d', '#d4af37', '#ffffff', '#8c1030'];
+    const colors = ['#c4073d', '#f8f3ec', '#f5921e', '#1f6fe0', '#ffc83d'];
     for (let i = 0; i < 60; i++) {
         const piece = document.createElement('div');
         piece.className = 'confetti-piece';
@@ -1331,12 +1331,17 @@ function showEndGameModal(title, message, celebrate) {
     const modal = document.getElementById('endgame-modal');
     const titleEl = document.getElementById('endgame-title');
     const messageEl = document.getElementById('endgame-message');
+    const orbit = document.getElementById('endgame-orbit');
+    const pulse = document.getElementById('endgame-pulse');
     if (!overlay || !modal || !titleEl || !messageEl) {
         alert(`${title}\n${message}`);
         return;
     }
     titleEl.textContent = title;
+    titleEl.classList.toggle('shine-text', !!celebrate);
     messageEl.textContent = message;
+    orbit?.classList.toggle('hidden', !celebrate);
+    pulse?.classList.toggle('hidden', !celebrate);
     overlay.classList.remove('hidden');
     modal.classList.remove('hidden');
     if (celebrate) spawnConfetti();

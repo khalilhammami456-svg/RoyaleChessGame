@@ -79,29 +79,44 @@
   --last-move-bg: rgba(255, 213, 79, 0.3);
 }
 
-/* ATAST — event theme: club crimson + gold, built from the ATAST brand marks */
+/* ATAST — event theme, built to match the club's "Journée d'intégration"
+   site: same brand crimson, cream, gold, and the Saira display type */
 [data-theme="atast"] {
-  --bg: #4a0a22;
-  --board-light: #f3e6d0;
+  --bg: #8c042b;
+  --board-light: #f8f3ec;
   --board-dark: #8c1030;
-  --board-border: #d4af37;
+  --board-border: #ffc83d;
   --bar-bg: #6e0e28;
   --btn-bg: #c4073da0;
   --btn-hover-bg: #c4073d;
-  --text-color: #f7e9d8;
+  --text-color: #f8f3ec;
   --move-history-bg: #6e0e28;
-  --move-history-text: #f7e9d8;
+  --move-history-text: #f8f3ec;
   --move-history-entry-white: rgba(255,255,255,0.18);
   --move-history-entry-black: rgba(0,0,0,0.32);
-  --move-history-entry-hover: rgba(212,175,55,0.38);
-  --accent: #d4af37;
-  --accent-rgb: 212,175,55;
-  --last-move-bg: rgba(212, 175, 55, 0.4);
+  --move-history-entry-hover: rgba(255,200,61,0.38);
+  --accent: #ffc83d;
+  --accent-rgb: 255,200,61;
+  --last-move-bg: rgba(255, 200, 61, 0.4);
+
+  /* Exact brand ramp + accents from the club's own design system */
+  --brand: #c4073d;
+  --brand-deep: #8c042b;
+  --brand-night: #3c0214;
+  --cream: #f8f3ec;
+  --gold: #ffc83d;
+  --orbit: #f5921e;
+  --globe: #1f6fe0;
+
+  font-family: 'Saira', system-ui, sans-serif;
 }
 
+html {
+    min-height: 100%;
+}
 body{
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     background-color: var(--bg);
     transition: background-color 0.4s ease; /* smooth theme switch */
     overflow-x: hidden;
@@ -117,73 +132,168 @@ main{
     padding: 20px 0;
 }
 
-/* ATAST event backdrop — soft crimson gradient with wavy corner motifs
-   echoing the badge logo's line art */
+/* ATAST event backdrop — the club site's own poster treatment: a radial
+   crimson gradient, a fine print-like grain, and its flowing ribbon
+   line-art drifting slowly behind the page */
 body[data-theme="atast"] {
-  background:
-    radial-gradient(circle at 12% 10%, #7a0e2a 0%, transparent 42%),
-    radial-gradient(circle at 88% 90%, #7a0e2a 0%, transparent 42%),
-    linear-gradient(160deg, #3a0517 0%, #560a22 55%, #3a0517 100%);
+  background: radial-gradient(ellipse at 30% 20%, var(--brand) 0%, var(--brand) 40%, var(--brand-deep) 100%);
   background-attachment: fixed;
 }
 
-body[data-theme="atast"]::before,
-body[data-theme="atast"]::after {
-  content: '';
+.atast-grain,
+.atast-ribbons {
+  display: none;
+}
+[data-theme="atast"] .atast-grain,
+[data-theme="atast"] .atast-ribbons {
+  display: block;
+}
+
+.atast-grain {
   position: fixed;
-  width: 480px;
-  height: 480px;
-  border: 22px solid rgba(255,255,255,0.06);
-  border-radius: 50% 40% 55% 45% / 45% 55% 40% 60%;
+  inset: 0;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: radial-gradient(#fff 1px, transparent 1.2px);
+  background-size: 6px 6px;
   pointer-events: none;
   z-index: 0;
-  animation: blobFloat 18s ease-in-out infinite;
 }
-body[data-theme="atast"]::before { top: -140px; left: -160px; }
-body[data-theme="atast"]::after { bottom: -160px; right: -160px; animation-delay: -9s; }
 
-@keyframes blobFloat {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(20px, -16px) rotate(12deg); }
+.atast-ribbons {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: rgba(248, 243, 236, 0.14);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.atast-ribbons.ribbons-hero {
+  color: rgba(248, 243, 236, 0.9);
+}
+
+.atast-ribbons .ribbon-tl {
+  transform-origin: top left;
+  animation: ribbonDrift 18s ease-in-out infinite;
+}
+
+.atast-ribbons .ribbon-br {
+  transform-origin: bottom right;
+  animation: ribbonDrift 28s ease-in-out infinite reverse;
+}
+
+@keyframes ribbonDrift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(-2%, 1.5%, 0) rotate(-2deg); }
+}
+
+/* Elliptical orbit rings borrowed from the ATAST Club globe logo */
+.orbit-rings {
+  pointer-events: none;
+  position: absolute;
+}
+
+/* Fixed-size variant for framing a small pill/chip, where the chip's own
+   aspect ratio is too wide-and-short for percentage-based inset to
+   produce a square-ish frame for the (square-viewBox) rings */
+.orbit-rings-hero {
+  width: 190px;
+  height: 190px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.orbit-rings svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.orbit-rings .ring-outer { animation: orbitSpin 14s linear infinite; }
+.orbit-rings .ring-inner { animation: orbitSpin 20s linear infinite reverse; opacity: 0.8; }
+
+@keyframes orbitSpin {
+  to { transform: rotate(360deg); }
 }
 
 /* Club branding strip — shown at the top of both pages */
 .atast-header {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 16px;
   text-align: center;
 }
 
-.atast-wordmark {
-  height: 46px;
-  width: auto;
-  background: #fff;
-  padding: 8px 16px;
-  border-radius: 14px;
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream, #f8f3ec);
+  border-radius: 1.1rem;
+  padding: 8px;
   box-shadow: 0 8px 22px rgba(0,0,0,0.28);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
-.atast-wordmark:hover {
-  transform: translateY(-2px) scale(1.02);
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.brand-mark:hover {
+  transform: translateY(-2px) scale(1.03);
   box-shadow: 0 12px 26px rgba(0,0,0,0.32);
 }
 
 .atast-tagline {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'Saira', system-ui, sans-serif;
   font-size: 0.8rem;
-  letter-spacing: 2px;
+  font-weight: 700;
+  letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--text-color);
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .atast-tagline .dot {
   color: var(--accent);
   margin: 0 6px;
+}
+
+.display-title {
+  font-family: 'Saira', system-ui, sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+
+/* Champion-style shine sweep, used on the end-game title when you win */
+.shine-text {
+  background: linear-gradient(90deg, #ffc83d, #fff3c4, #ffc83d);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shineSweep 3.5s linear infinite;
+}
+@keyframes shineSweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.pulse-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(255, 200, 61, 0.5);
+  animation: pulseRing 1.6s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes pulseRing {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  100% { transform: scale(1.6); opacity: 0; }
 }
 #board{
     width: 570px;
@@ -236,6 +346,44 @@ button span{
 .bar button:hover{
     transform: scale(1.1);
     background-color: var(--btn-hover-bg);
+}
+
+/* ATAST theme — chunky "pressed" buttons matching the club site's Button component */
+[data-theme="atast"] .bar button,
+[data-theme="atast"] .choose-color-btn,
+[data-theme="atast"] .theme-btn {
+  font-family: 'Saira', system-ui, sans-serif;
+}
+[data-theme="atast"] .bar button {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: 0 6px 0 0 var(--brand-deep);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.15s ease;
+}
+[data-theme="atast"] .bar button:hover {
+  transform: translateY(-2px);
+  background-color: var(--btn-hover-bg);
+  filter: brightness(1.08);
+  box-shadow: 0 8px 0 0 var(--brand-deep);
+}
+[data-theme="atast"] .bar button:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 0 var(--brand-deep);
+}
+[data-theme="atast"] .choose-color-btn {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: 0 6px 0 0 rgba(0,0,0,0.35);
+}
+[data-theme="atast"] .choose-color-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 9px 0 0 rgba(0,0,0,0.35), 0 12px 26px rgba(255,200,61,0.4);
+}
+[data-theme="atast"] .choose-color-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 0 rgba(0,0,0,0.35);
 }
 
 /* Shine sweep on hover — shared by the action bar and the mode-select buttons */
@@ -482,8 +630,18 @@ button span{
   animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   font-family: 'Courier New', Courier, monospace;
 }
+[data-theme="atast"] .endgame-modal {
+  font-family: 'Saira', system-ui, sans-serif;
+}
+
+.endgame-emblem {
+  position: relative;
+  display: inline-block;
+}
 
 .endgame-emblem img {
+  position: relative;
+  z-index: 1;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -499,6 +657,11 @@ button span{
   letter-spacing: 1px;
   margin-bottom: 8px;
   text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+.endgame-title.shine-text {
+  color: transparent;
+  text-shadow: none;
+  font-weight: 800;
 }
 
 .endgame-message {
@@ -564,6 +727,42 @@ button span{
   padding: 28px 24px 32px;
 }
 
+.hero-title-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 4px 0 46px;
+}
+
+.hero-title {
+  font-size: clamp(2.6rem, 9vw, 5.6rem);
+  color: var(--text-color);
+  text-align: center;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.35);
+}
+
+.hero-chip-wrap {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  margin-top: 18px;
+}
+
+.hero-chip {
+  position: relative;
+  z-index: 1;
+  background: var(--cream, #f8f3ec);
+  color: var(--brand, #c4073d);
+  font-family: 'Saira', system-ui, sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: clamp(0.8rem, 2vw, 1.05rem);
+  padding: 10px 26px;
+  border-radius: 999px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+}
+
 .page-title {
   display: flex;
   align-items: center;
@@ -626,9 +825,6 @@ button span{
 
 [data-theme="atast"] .option-card:hover {
   box-shadow: 0 16px 34px rgba(212,175,55,0.35), 0 0 0 2px var(--accent);
-}
-[data-theme="atast"] .choose-color-btn:hover {
-  box-shadow: 0 12px 26px rgba(212,175,55,0.4);
 }
 
 .white-card {
@@ -971,14 +1167,29 @@ color: #fff; border: 2px solid #fff; }
     font-size: 2rem;
   }
 
-  .atast-wordmark {
-    height: 34px;
-    padding: 6px 12px;
+  .brand-mark {
+    width: 40px !important;
+    height: 40px !important;
+    padding: 6px;
   }
 
   .atast-tagline {
     font-size: 0.65rem;
     letter-spacing: 1px;
+  }
+
+  .hero-title {
+    font-size: clamp(2.2rem, 13vw, 3.4rem);
+  }
+
+  .hero-chip {
+    font-size: 0.75rem;
+    padding: 8px 18px;
+  }
+
+  .orbit-rings-hero {
+    width: 130px;
+    height: 130px;
   }
 
   .endgame-modal {
