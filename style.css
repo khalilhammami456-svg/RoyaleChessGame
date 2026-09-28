@@ -17,6 +17,9 @@
   --move-history-entry-white: rgba(255,255,255,0.2);
   --move-history-entry-black: rgba(0,0,0,0.25);
   --move-history-entry-hover: rgba(255,255,255,0.4);
+  --accent: #3a8f3a;
+  --accent-rgb: 58,143,58;
+  --last-move-bg: rgba(255, 213, 79, 0.4);
 }
 
 [data-theme="dark"] {
@@ -33,6 +36,9 @@
   --move-history-entry-white: rgba(255,255,255,0.15);
   --move-history-entry-black: rgba(0,0,0,0.35);
   --move-history-entry-hover: rgba(255,255,255,0.25);
+  --accent: #6c63ff;
+  --accent-rgb: 108,99,255;
+  --last-move-bg: rgba(255, 213, 79, 0.28);
 }
 
 [data-theme="ocean"] {
@@ -49,6 +55,9 @@
   --move-history-entry-white: rgba(255,255,255,0.2);
   --move-history-entry-black: rgba(0,0,0,0.2);
   --move-history-entry-hover: rgba(255,255,255,0.3);
+  --accent: #eab308;
+  --accent-rgb: 234,179,8;
+  --last-move-bg: rgba(255, 213, 79, 0.32);
 }
 
 [data-theme="forest"] {
@@ -65,21 +74,116 @@
   --move-history-entry-white: rgba(255,255,255,0.2);
   --move-history-entry-black: rgba(0,0,0,0.22);
   --move-history-entry-hover: rgba(255,255,255,0.28);
+  --accent: #d97706;
+  --accent-rgb: 217,119,6;
+  --last-move-bg: rgba(255, 213, 79, 0.3);
+}
+
+/* ATAST — event theme: club crimson + gold, built from the ATAST brand marks */
+[data-theme="atast"] {
+  --bg: #4a0a22;
+  --board-light: #f3e6d0;
+  --board-dark: #8c1030;
+  --board-border: #d4af37;
+  --bar-bg: #6e0e28;
+  --btn-bg: #c4073da0;
+  --btn-hover-bg: #c4073d;
+  --text-color: #f7e9d8;
+  --move-history-bg: #6e0e28;
+  --move-history-text: #f7e9d8;
+  --move-history-entry-white: rgba(255,255,255,0.18);
+  --move-history-entry-black: rgba(0,0,0,0.32);
+  --move-history-entry-hover: rgba(212,175,55,0.38);
+  --accent: #d4af37;
+  --accent-rgb: 212,175,55;
+  --last-move-bg: rgba(212, 175, 55, 0.4);
 }
 
 body{
     width: 100%;
     height: 100vh;
-    background-color: var(--bg); 
+    background-color: var(--bg);
     transition: background-color 0.4s ease; /* smooth theme switch */
+    overflow-x: hidden;
 }
 main{
+    position: relative;
+    z-index: 1;
     display:flex;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     padding: 20px 0;
+}
+
+/* ATAST event backdrop — soft crimson gradient with wavy corner motifs
+   echoing the badge logo's line art */
+body[data-theme="atast"] {
+  background:
+    radial-gradient(circle at 12% 10%, #7a0e2a 0%, transparent 42%),
+    radial-gradient(circle at 88% 90%, #7a0e2a 0%, transparent 42%),
+    linear-gradient(160deg, #3a0517 0%, #560a22 55%, #3a0517 100%);
+  background-attachment: fixed;
+}
+
+body[data-theme="atast"]::before,
+body[data-theme="atast"]::after {
+  content: '';
+  position: fixed;
+  width: 480px;
+  height: 480px;
+  border: 22px solid rgba(255,255,255,0.06);
+  border-radius: 50% 40% 55% 45% / 45% 55% 40% 60%;
+  pointer-events: none;
+  z-index: 0;
+  animation: blobFloat 18s ease-in-out infinite;
+}
+body[data-theme="atast"]::before { top: -140px; left: -160px; }
+body[data-theme="atast"]::after { bottom: -160px; right: -160px; animation-delay: -9s; }
+
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(20px, -16px) rotate(12deg); }
+}
+
+/* Club branding strip — shown at the top of both pages */
+.atast-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.atast-wordmark {
+  height: 46px;
+  width: auto;
+  background: #fff;
+  padding: 8px 16px;
+  border-radius: 14px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.atast-wordmark:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.32);
+}
+
+.atast-tagline {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+.atast-tagline .dot {
+  color: var(--accent);
+  margin: 0 6px;
 }
 #board{
     width: 570px;
@@ -108,6 +212,8 @@ main{
     transition: background-color 0.4s ease;
 }
 .bar button{
+    position: relative;
+    overflow: hidden;
     display:flex;
     justify-content: center;
     align-items: center;
@@ -130,6 +236,29 @@ button span{
 .bar button:hover{
     transform: scale(1.1);
     background-color: var(--btn-hover-bg);
+}
+
+/* Shine sweep on hover — shared by the action bar and the mode-select buttons */
+.bar button::after,
+.choose-color-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+.bar button:hover::after,
+.choose-color-btn:hover::after {
+  left: 120%;
+}
+
+.dark:hover .piece, .light:hover .piece {
+  transform: scale(1.08);
 }
 
 .light{
@@ -216,9 +345,47 @@ button span{
     background-color: #7fc97f !important;
   animation: blink 1s infinite !important;
 }
+[data-theme="atast"] .selected {
+  background-color: var(--accent) !important;
+}
 .selected .piece {
   transform: translateY(-2px);
 }
+@keyframes blink {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.18); }
+}
+
+/* Legal-move hints — dots on empty squares, rings on capturable pieces */
+.move-hint {
+  position: relative;
+}
+.move-hint::after {
+  content: '';
+  position: absolute;
+  width: 28%;
+  height: 28%;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.55);
+  pointer-events: none;
+  animation: hintPulse 1.4s ease-in-out infinite;
+}
+.move-hint.capture-hint::after {
+  width: 84%;
+  height: 84%;
+  background: transparent;
+  border: 4px solid rgba(var(--accent-rgb), 0.75);
+}
+@keyframes hintPulse {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.15); opacity: 0.85; }
+}
+
+/* Last move played — a soft highlight on both squares */
+.last-move {
+  box-shadow: inset 0 0 0 999px var(--last-move-bg);
+}
+
 /* Square stays red */
 .in-check {
   background-color: #e74c3c !important;
@@ -284,6 +451,99 @@ button span{
 
 .hidden {
   display: none;
+}
+
+/* ─── Game End Modal ─────────────────────────────────────────── */
+.endgame-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10,2,6,0.65);
+  backdrop-filter: blur(3px);
+  z-index: 200;
+}
+
+.endgame-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(160deg, var(--bar-bg), var(--bg));
+  border: 3px solid var(--accent);
+  border-radius: 22px;
+  padding: 30px 36px 26px;
+  z-index: 201;
+  text-align: center;
+  min-width: 280px;
+  max-width: 92vw;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 0 6px rgba(var(--accent-rgb), 0.1);
+  animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.endgame-emblem img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  margin-bottom: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+.endgame-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--text-color);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.endgame-message {
+  font-size: 1rem;
+  color: var(--move-history-text);
+  opacity: 0.9;
+  margin-bottom: 22px;
+}
+
+.endgame-close-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 10px 26px;
+  font-weight: bold;
+  cursor: pointer;
+  background: var(--accent);
+  color: #1b1006;
+  font-family: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.endgame-close-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+}
+
+/* ─── Confetti ───────────────────────────────────────────────── */
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 250;
+}
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  opacity: 0.9;
+  border-radius: 2px;
+  animation-name: confettiFall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+@keyframes confettiFall {
+  0%   { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(600deg); opacity: 0.85; }
 }
 .mode-select-page {
   width: 100%;
@@ -364,6 +624,13 @@ button span{
   box-shadow: 0 16px 30px rgba(0,0,0,0.12);
 }
 
+[data-theme="atast"] .option-card:hover {
+  box-shadow: 0 16px 34px rgba(212,175,55,0.35), 0 0 0 2px var(--accent);
+}
+[data-theme="atast"] .choose-color-btn:hover {
+  box-shadow: 0 12px 26px rgba(212,175,55,0.4);
+}
+
 .white-card {
   background: linear-gradient(180deg, #f5e7ca 0%, #d9b77a 100%);
   color: #1b1b1b;
@@ -405,6 +672,8 @@ button span{
 }
 
 .choose-color-btn {
+  position: relative;
+  overflow: hidden;
   font-size: clamp(1.2rem, 2vw, 1.7rem);
   font-weight: bolder;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -459,10 +728,11 @@ button span{
 }
 
 .theme-btn[data-theme="classic"] { background: #b58863; }
-.theme-btn[data-theme="dark"]    { background: #22223b; 
+.theme-btn[data-theme="dark"]    { background: #22223b;
 color: #fff; border: 2px solid #fff; }
 .theme-btn[data-theme="ocean"]   { background: #4a90a4; }
 .theme-btn[data-theme="forest"]  { background: #6b8f57; }
+.theme-btn[data-theme="atast"]   { background: linear-gradient(135deg, #c4073d 50%, #d4af37 50%); }
 
 .player-timers {
   width: 570px;
@@ -487,8 +757,14 @@ color: #fff; border: 2px solid #fff; }
 }
 
 .timer-panel.active {
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.35);
+  box-shadow: 0 0 0 2px var(--accent), 0 0 14px 2px rgba(var(--accent-rgb), 0.35);
   transform: translateY(-1px);
+  animation: timerPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+  0%, 100% { box-shadow: 0 0 0 2px var(--accent), 0 0 10px 2px rgba(var(--accent-rgb), 0.28); }
+  50% { box-shadow: 0 0 0 2px var(--accent), 0 0 20px 6px rgba(var(--accent-rgb), 0.55); }
 }
 
 .timer-label {
@@ -693,6 +969,25 @@ color: #fff; border: 2px solid #fff; }
     width: 52px;
     height: 52px;
     font-size: 2rem;
+  }
+
+  .atast-wordmark {
+    height: 34px;
+    padding: 6px 12px;
+  }
+
+  .atast-tagline {
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+  }
+
+  .endgame-modal {
+    padding: 22px 20px 18px;
+    min-width: 240px;
+  }
+
+  .endgame-title {
+    font-size: 1.15rem;
   }
 }
 
