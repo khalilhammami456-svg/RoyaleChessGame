@@ -125,7 +125,14 @@ document.body.setAttribute('data-player-color', playerColor);
 let currentTurn = 'white';
 let moveHistory = [];
 let future = [];
-const TIME_PER_PLAYER = 600;
+const MIN_TIME_MINUTES = 3;
+const MAX_TIME_MINUTES = 10;
+function readSelectedTimeMinutes() {
+    const parsed = Number.parseInt(localStorage.getItem('chess-time-minutes'), 10);
+    if (!Number.isFinite(parsed)) return MAX_TIME_MINUTES;
+    return Math.min(MAX_TIME_MINUTES, Math.max(MIN_TIME_MINUTES, parsed));
+}
+const TIME_PER_PLAYER = readSelectedTimeMinutes() * 60;
 let timers = { white: TIME_PER_PLAYER, black: TIME_PER_PLAYER };
 let timerInterval = null;
 let gameIsOver = false;

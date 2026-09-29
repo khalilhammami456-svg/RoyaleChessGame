@@ -55,6 +55,16 @@
                 <h1>Choose Your Match</h1>
             </div>
 
+            <div class="time-select" id="time-select-wrap">
+                <label for="time-select">Time per Player</label>
+                <div class="time-select-row">
+                    <span class="time-select-bound">3</span>
+                    <input type="range" id="time-select" min="3" max="10" step="1" value="10">
+                    <span class="time-select-bound">10</span>
+                </div>
+                <span class="time-select-value" id="time-select-value">10 min</span>
+            </div>
+
             <div class="container">
                 <div class="option-card white-card">
                     <h1>Two Players</h1>
@@ -82,6 +92,27 @@
       document.addEventListener('DOMContentLoaded', () => {
         const buttons = document.querySelectorAll('.choose-color-btn');
 
+        const MIN_MINUTES = 3;
+        const MAX_MINUTES = 10;
+        const timeSlider = document.getElementById('time-select');
+        const timeValue = document.getElementById('time-select-value');
+
+        const clampMinutes = (value) => {
+          const parsed = Number.parseInt(value, 10);
+          if (!Number.isFinite(parsed)) return MAX_MINUTES;
+          return Math.min(MAX_MINUTES, Math.max(MIN_MINUTES, parsed));
+        };
+
+        const savedMinutes = clampMinutes(localStorage.getItem('chess-time-minutes'));
+        timeSlider.value = savedMinutes;
+        timeValue.textContent = `${savedMinutes} min`;
+
+        timeSlider.addEventListener('input', () => {
+          const minutes = clampMinutes(timeSlider.value);
+          timeValue.textContent = `${minutes} min`;
+          localStorage.setItem('chess-time-minutes', String(minutes));
+        });
+
         buttons.forEach((button) => {
           const icon = button.parentElement.querySelector('.player-icon');
           const playerColor = button.dataset.playerColor || 'white';
@@ -90,6 +121,7 @@
           button.addEventListener('click', () => {
             localStorage.setItem('chess-game-mode', button.dataset.gameMode || 'two-player');
             localStorage.setItem('chess-player-color', playerColor);
+            localStorage.setItem('chess-time-minutes', String(clampMinutes(timeSlider.value)));
             window.location.href = 'game.html';
           });
         });
